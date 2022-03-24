@@ -1,0 +1,394 @@
+
+/* ========================================================================== */
+/* ========================================================================== */
+/* ======================== ES 16 Mar 22 High Card Dom ====================== */
+/* ========================================================================== */
+/* ========================================================================== */
+
+/* ========================================================================== */
+/* ============================== Game logic ================================ */
+/* ========================================================================== */
+/* ========================================================================== */
+
+// Game instructions
+// Break deck into two halves 
+// Each player draws a card
+// Take turns opening
+// Compare, higher card wins 
+
+// Can draw five cards, highest difference wins
+
+/* ========================================================================== */
+/* ========================================================================== */
+/* ============================== Helper function =========================== */
+/* ========================================================================== */
+/* ========================================================================== */
+
+// Global variables 
+
+var player1Deck = []
+var player2Deck = []
+
+var player1Hand = ""
+var player2Hand = ""
+
+var newDeck = []
+var myOutputValue = ""
+
+var gameMode = "player1draw"
+
+var button1 = document.getElementById("buttonPlayer1");
+var button2 = document.getElementById("buttonPlayer2");
+var buttonNext = document.getElementById("next");
+var buttonRestart = document.getElementById("restart");
+
+// Create deck, repeat 13 * 4
+
+var createDeck = function (localDeck) {
+  var localDeck = [];
+  var suitArray = ["hearts","diamonds","clubs","spades"]
+  
+  // Create 4 suits
+  for (var i = 0; i <4; i++) {
+  // Create 13 cards
+  var cardSuit = suitArray[i]
+    for (var j = 1; j<=13; j++) {
+      
+      var cardRank = j;
+      var cardName = j;
+      // Change name of picture card
+      
+      if (cardRank === 1) {
+        cardName = "ace";
+      }
+      if (cardRank === 11) {
+        cardName = "jack";
+      }
+      if (cardRank === 12) {
+        cardName = "queen";
+      }
+      if (cardRank === 13) {
+        cardName = "king";
+      }
+      
+      var card = {
+        rank: cardRank,
+        name: cardName,
+        suit: cardSuit
+      }
+      localDeck.push(card)
+    }
+  }
+  return localDeck
+}
+
+newDeck = createDeck()
+console.log(createDeck())
+
+// Shuffle it
+var localDeck2 = [];
+var shuffleDeck = function(localDeck2) {
+  for (var i = 0; i < localDeck2.length; i++) {
+    var currentCard = localDeck2[i];
+    var randomCard = localDeck2[Math.ceil((Math.random()*localDeck2.length)-1)]
+    localDeck2[i] = randomCard;
+    localDeck2[Math.ceil((Math.random()*localDeck2.length)-1)] = currentCard;
+  }
+  return localDeck2
+}
+
+// Create a shuffled deck
+newDeck = shuffleDeck(newDeck);
+console.log(newDeck)
+
+// Split into two
+player1Deck = newDeck.splice(0,26)
+player2Deck = newDeck
+console.log(player1Deck, player2Deck)
+
+// Converting string to image
+
+var convertArrayToImageLink = function (array) {
+  var output = "";
+  for (var index = 0; index < array.length; index++) {
+    var card = array[index];
+    var image =
+      '<img src="https://raw.githubusercontent.com/Ardeeter/Blackjack-exercise/main/images/' +
+      card.rank +
+      "_of_" +
+      card.suit +
+      '.png"/>';
+    output = output + image;
+  }
+  return output;
+};
+
+/* ========================================================================== */
+/* ========================================================================== */
+/* ============================== Game function ============================= */
+/* ========================================================================== */
+/* ========================================================================== */
+
+// Open cards (now an array when draw multiple cards)
+var player1Hand = []
+var player2Hand = []
+
+// // function for drawing and displaying card
+// var deck = []
+// var newHand = []
+// function drawCard (deck, newHand) {
+//     for (var i = 0; i <5; i++) {
+//       var newCard = deck.pop()
+//       newHand.push(newCard) 
+//     }
+//     console.log(newHand)
+//     return newHand
+//   }
+
+/* ========================================================================== */
+/* ========================================================================== */
+/* ============================ Design function ============================= */
+/* ========================================================================== */
+/* ========================================================================== */
+
+  // Create player 1 card output box 
+      var player1CardOutputBox = document.createElement("output-div-player1");
+      document.body.appendChild(player1CardOutputBox)
+      
+  // Create player 2 card output box 
+      var player2CardOutputBox = document.createElement("output-div-player2");
+      document.body.appendChild(player2CardOutputBox)
+        
+  // // Create statement output box
+  //     var wordsOutputBox = document.createElement("output-div");
+  //     document.body.appendChild(wordsOutputBox)
+
+  // Player 1 button
+  button1.addEventListener("click", () => {
+    if (gameMode == "player1draw") {
+      // Draw 5 cards; loop 5 times
+      for (var i = 0; i <5; i++) {
+        player1Hand.push(player1Deck.pop())
+        console.log(player1Hand)
+        // Convert to image; loop 5 times
+        var imageOfPlayer1Cards = convertArrayToImageLink(player1Hand);
+        player1CardOutputBox.innerHTML = imageOfPlayer1Cards 
+      }
+      // Convert to words; no loop
+      var player1Words = ""
+      player1Words = "Player 1 drew these cards. It is player 2's turn to draw.";
+      wordsOutputBox.innerHTML = player1Words
+      button1.style.visibility = "hidden" 
+      gameMode = "player2draw"      
+    }
+      })
+
+  // Player 2 button
+  button2.addEventListener("click", () => {
+    if (gameMode == "player2draw") {
+      // Draw 5 cards; loop 5 times
+      for (var i = 0; i <5; i++) {
+        player2Hand.push(player2Deck.pop())
+        console.log(player2Hand)
+        // Convert to image; loop 5 times
+        var imageOfPlayer2Cards = convertArrayToImageLink(player2Hand);
+        player2CardOutputBox.innerHTML = imageOfPlayer2Cards 
+      }
+      // Convert to words; no loop
+      var player2Words = ""
+      player2Words = "Player 2 drew these cards. Click to see who wins.";
+      wordsOutputBox.innerHTML = player2Words
+      button2.style.visibility = "hidden" 
+      gameMode = "whoWins"      
+    }
+      })
+
+  // Game modes
+if (gameMode == "player1draw") {
+  gameMode = "player2draw"
+  console.log(player1Deck, player2Deck)}
+
+if (gameMode == "player2draw") {
+  button1.style.visibility = "hidden" 
+  gameMode = "whoWins"
+  console.log(player1Deck, player2Deck)}
+
+if (gameMode == "whoWins") {
+  button2.style.visibility = "hidden" 
+  gameMode = "reset"
+  console.log(player1Deck, player2Deck)}
+
+if (gameMode == "reset") {
+  button1.style.visibility = "visible"
+  button2.style.visibility = "visible"
+  buttonNext.style.visibility = "visible"
+  buttonNext.style.visibility = "visible"
+  gameMode = "player1draw"
+}
+
+
+  
+  
+
+// Find min, max and difference
+var player1difference = Math.max(player1Hand.rank) - Math.min(player1Hand.rank)
+
+// Player 2 draws by clicking button
+button2.addEventListener("click", () => {
+  if (gameMode == "player2draw") {
+    for (var i = 0; i <5; i++) {
+      player2Hand.push(player2Deck.pop())
+    button2.style.visibility = "hidden" 
+    gameMode = "whoWins"
+    console.log(player1Deck, player2Deck)
+    }
+  }
+})
+
+// Display card as image
+for (let k=0; k<player2Hand.length; k++) {
+  var imageOfPlayer2Cards = convertCardToImageLink(player2Hand[k]);
+  myOutputValue = imageOfPlayer2Cards;
+} 
+// Display card as word
+  var outputLocation = document.getElementById("output-div-player2")
+  var myOutputValueWords = "Player 2 drew " + player2Hand.name + " of " + player2Hand.suit + ". Click to see who wins.";
+  var outputLocationWords = document.getElementById("output-div");
+  outputLocation.innerHTML = myOutputValue
+  outputLocationWords.innerHTML = myOutputValueWords
+  
+// Find min, max and difference
+var player2difference = Math.max(player2Hand.rank) - Math.min(player2Hand.rank)
+  
+
+
+
+ // Win, lose or tie
+buttonNext.addEventListener("click", () => {
+  if (gameMode == "whoWins"){
+    if (player1difference > player2difference) {
+      myOutputValue = "Player 1 wins. Click to play again.";
+    } else if (player1Hand["rank"] < player2Hand["rank"]) {
+      myOutputValue = "Player 2 wins. Click to play again.";
+    } else if (player1Hand["rank"] == player2Hand["rank"]) {
+      myOutputValue = "It's a tie. Click to play again.";
+    }
+    var outputLocation = document.getElementById("output-div");
+    outputLocation.innerHTML = myOutputValue;
+buttonNext.style.visibility = "hidden"
+    gameMode = "reset"
+  }
+  })
+
+    buttonRestart.addEventListener("click", () => {
+     if (gameMode == "reset") {
+      player1Hand = player1Deck.pop()
+      player2Hand = player2Deck.pop()
+      var outputDiv = document.getElementById("output-div") 
+        outputDiv.innerHTML = "Player 1, click to draw."
+      var outputDivPlayer1 = document.getElementById("output-div-player1") 
+        outputDivPlayer1.innerHTML = ""
+      var outputDivPlayer2 = document.getElementById("output-div-player2") 
+        outputDivPlayer2.innerHTML = ""
+      
+      button1.style.visibility = "visible"
+      button2.style.visibility = "visible"
+      buttonNext.style.visibility = "visible"
+      buttonNext.style.visibility = "visible"
+
+      gameMode = "player1draw"
+      console.log(player1Deck, player2Deck)
+      }
+  })
+
+
+
+// // Open cards (now an array when draw multiple cards)
+// var player1Hand = ""
+// var player2Hand = ""
+
+// // Player 1 draws
+// button1.addEventListener("click", () => {
+//   if (gameMode == "player1draw") {
+//     player1Hand = player1Deck.pop()
+//     player2Hand = player2Deck.pop()
+//     var imageOfPlayer1Cards = convertCardToImageLink(player1Hand);
+//     myOutputValue = imageOfPlayer1Cards;
+//     var outputLocation = document.getElementById("output-div-player1");
+
+//     myOutputValueWords = "Player 1 drew " + player1Hand.name + " of " + player1Hand.suit + ". It is player 2's turn to draw.";
+//     var outputLocationWords = document.getElementById("output-div");
+    
+//     outputLocation.innerHTML = myOutputValue
+//     outputLocationWords.innerHTML = myOutputValueWords
+    
+//     button1.style.visibility = "hidden" 
+//     gameMode = "player2draw"
+//     console.log(player1Deck, player2Deck)
+//     }
+//   }
+// )
+
+// // Player 2 draws
+//   button2.addEventListener("click", () => {
+//     if (gameMode == "player2draw") {
+//       var imageOfPlayer2Cards = convertCardToImageLink(player2Hand);
+//       myOutputValue = imageOfPlayer2Cards;
+//       var outputLocation = document.getElementById("output-div-player2");
+
+//     myOutputValueWords = "Player 2 drew " + player2Hand.name + " of " + player2Hand.suit + ". Click to see who wins.";
+//     var outputLocationWords = document.getElementById("output-div");
+    
+//     outputLocation.innerHTML = myOutputValue
+//     outputLocationWords.innerHTML = myOutputValueWords
+    
+//     button2.style.visibility = "hidden"
+//     gameMode = "whoWins"
+//     console.log(player1Deck, player2Deck)
+//   }
+// }
+// )
+
+//  // Win, lose or tie
+// buttonNext.addEventListener("click", () => {
+//   if (gameMode == "whoWins"){
+//     if (player1Hand["rank"] > player2Hand["rank"]) {
+//       player1Deck.unshift(player1Hand);
+//       player1Deck.unshift(player2Hand);
+//       myOutputValue = "Player 1 wins. Click to play again.";
+//     } else if (player1Hand["rank"] < player2Hand["rank"]) {
+//       player2Deck.unshift(player1Hand);
+//       player2Deck.unshift(player2Hand);
+//       myOutputValue = "Player 2 wins. Click to play again.";
+//     } else if (player1Hand["rank"] == player2Hand["rank"]) {
+//       myOutputValue = "It's a tie. Click to play again.";
+//     }
+//     var outputLocation = document.getElementById("output-div");
+//     outputLocation.innerHTML = myOutputValue;
+// buttonNext.style.visibility = "hidden"
+//     gameMode = "reset"
+//   }
+//   })
+
+//     buttonRestart.addEventListener("click", () => {
+//      if (gameMode == "reset") {
+//       player1Hand = player1Deck.pop()
+//       player2Hand = player2Deck.pop()
+//       var outputDiv = document.getElementById("output-div") 
+//         outputDiv.innerHTML = "Player 1, click to draw."
+//       var outputDivPlayer1 = document.getElementById("output-div-player1") 
+//         outputDivPlayer1.innerHTML = ""
+//       var outputDivPlayer2 = document.getElementById("output-div-player2") 
+//         outputDivPlayer2.innerHTML = ""
+      
+//       button1.style.visibility = "visible"
+//       button2.style.visibility = "visible"
+//       buttonNext.style.visibility = "visible"
+//       buttonNext.style.visibility = "visible"
+
+//       gameMode = "player1draw"
+//       console.log(player1Deck, player2Deck)
+//       }
+//   })
+  
+

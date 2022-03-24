@@ -1,4 +1,30 @@
 
+// sorting objects
+let obj = {"you": 100, "me": 75, "foo": 116, "bar": 15};
+
+let entries = Object.entries(obj);
+// [["you",100],["me",75],["foo",116],["bar",15]]
+
+let sorted = entries.sort((a, b) => a[1] - b[1]);
+// [["bar",15],["me",75],["you",100],["foo",116]]
+console.log(sorted)
+
+// var convertArrayToImageLink = function (array) {
+//   var output = "";
+//   for (var index = 0; index < array.length; index++) {
+//     var card = array[index];
+//     var image =
+//       '<img src="https://raw.githubusercontent.com/Ardeeter/Blackjack-exercise/main/images/' +
+//       card[0] +
+//       "_of_" +
+//       card[1] +
+//       '.png"/>';
+//     output = output + image;
+//   }
+//   return output;
+// };
+
+
 /* ========================================================================== */
 /* ========================================================================== */
 /* ======================== ES 16 Mar 22 High Card Dom ====================== */
@@ -36,14 +62,8 @@ var player2Hand = []
 var newDeck = []
 var myOutputValue = ""
 
-var numberOfPlayer1Clicks = 0
-var numberOfPlayer2Clicks = 0
-var maxNumberOfClicks = ""
-
 var gameMode = "player1draw"
 
-var inputField = document.getElementById("inputField");
-var buttonChoose = document.getElementById("inputButton");
 var button1 = document.getElementById("buttonPlayer1");
 var button2 = document.getElementById("buttonPlayer2");
 var buttonNext = document.getElementById("next");
@@ -157,27 +177,6 @@ var convertArrayToImageLink = function (array) {
 // let sorted = entries.sort((a, b) => a[1] - b[1]);
 // // [["bar",15],["me",75],["you",100],["foo",116]]
 
-
-function findHighestCard(array) {
-  var valueArray = []
-  for (let i = 0; i < array.length; i++) {
-    var card = array[i]
-    valueArray.push(card.rank)
-  }
-  var max = Math.max(...valueArray)
-  return max
-}
-
-function findLowestCard(array) {
-  var valueArray = []
-  for (let i = 0; i < array.length; i++) {
-    var card = array[i]
-    valueArray.push(card.rank)
-  }
-  var min = Math.min(...valueArray)
-  return min
-}
-
 function findLowestFullCard(array) {
   for (let i = 0; i < array.length; i++) {
     var lowestCard = array[0]
@@ -201,6 +200,9 @@ function findLowestFullCard(array) {
  }
 
 
+// // Converting array/ object to image
+
+
 /* ========================================================================== */
 /* ========================================================================== */
 /* ============================== Game function ============================= */
@@ -208,6 +210,29 @@ function findLowestFullCard(array) {
 /* ========================================================================== */
 
 // Open cards (now an array when draw multiple cards)
+
+
+// // function for drawing and displaying card
+// var deck = []
+// var newHand = []
+// function drawCard (deck, newHand) {
+//     for (var i = 0; i <5; i++) {
+//       var newCard = deck.pop()
+//       newHand.push(newCard) 
+//     }
+//     console.log(newHand)
+//     return newHand
+//   }
+
+/* ========================================================================== */
+/* ========================================================================== */
+/* ============================ Design function ============================= */
+/* ========================================================================== */
+/* ========================================================================== */
+
+  // Create player 1 card output box 
+      // var player1CardOutputBox = document.createElement("output-div-player1");
+      // document.body.appendChild(player1CardOutputBox)
       
       var player1CardOutputBox = document.getElementById("player1Card")
       document.body.appendChild(player1CardOutputBox)
@@ -219,15 +244,6 @@ function findLowestFullCard(array) {
   // Create statement output box
   var wordsOutputBox = document.getElementById("output-div");
 
-  // Using input to determine array length
-  
-  buttonChoose.addEventListener("click",() => {
-    var input = document.getElementById("inputField")
-    maxNumberOfClicks = input.value
-    console.log(maxNumberOfClicks)
-    buttonChoose.style.visibility = "hidden"
-    inputField.style.visibility = "hidden"
-  })
   
   // Player 1 button
   button1.addEventListener("click", () => {
@@ -237,9 +253,9 @@ function findLowestFullCard(array) {
       wordsOutputBox.innerHTML = "Player 2 can click now."
     } 
     if (gameMode == "player1draw") {
-    if (numberOfPlayer1Clicks<maxNumberOfClicks) {
+      
       // Draw 5 cards; loop 5 times
-      for (var i = 0; i < maxNumberOfClicks; i++) {
+      for (var i = 0; i <5; i++) {
         player1Hand.push(player1Deck.pop())
         // Convert to image; loop 5 times
         var imageOfPlayer1Cards = convertArrayToImageLink(player1Hand);
@@ -251,47 +267,39 @@ function findLowestFullCard(array) {
       player1Words = "Player 1 drew these cards. It is player 2's turn to draw.";
       wordsOutputBox.innerHTML = player1Words
     }
-    numberOfPlayer1Clicks++
     gameMode = "player2draw"
     button1.style.visibility = "hidden" 
-  }
-    else {
-        var player1difference = findHighestCard(player1Hand)- findLowestCard(player1Hand)
-        var player2difference = findHighestCard(player2Hand)- findLowestCard(player2Hand)
-        console.log(player1difference)
-        console.log(player2difference)
-
-        var highLowArray1 = []
-        highLowArray1.push(findLowestFullCard(player1Hand))
-        highLowArray1.push(findHighestFullCard(player1Hand))
-        player1CardOutputBox.innerHTML = "Player 1's winning cards " + convertArrayToImageLink(highLowArray1)
-
-        var highLowArray2 = []
-        highLowArray2.push(findLowestFullCard(player2Hand))
-        highLowArray2.push(findHighestFullCard(player2Hand))
-        player2CardOutputBox.innerHTML = "Player 2's winning cards " + convertArrayToImageLink(highLowArray2)
-
-        if (gameMode == "whoWins"){
-          if (player1difference > player2difference) {
-            myOutputValue = "Player 1 wins. Click to play again." 
-          } else if (player1difference < player2difference) {
-            myOutputValue = "Player 2 wins. Click to play again.";
-          } else {
-            myOutputValue = "It's a tie. Click to play again.";
-          }
-          wordsOutputBox.innerHTML = myOutputValue;
-        }
-          gameMode = "reset"
-          buttonNext.style.visibility = "hidden"
-      }
-    
   })
+
+// console.table(findLowestCard(player1Hand))
+
+function findHighestCard(array) {
+  var valueArray = []
+  for (let i = 0; i < array.length; i++) {
+    var card = array[i]
+    valueArray.push(card.rank)
+  }
+  var max = Math.max(...valueArray)
+  return max
+}
+
+function findLowestCard(array) {
+  var valueArray = []
+  for (let i = 0; i < array.length; i++) {
+    var card = array[i]
+    valueArray.push(card.rank)
+  }
+  var min = Math.min(...valueArray)
+  return min
+}
+
 
   // Player 2 button
   button2.addEventListener("click", () => {
     if (gameMode == "player2draw") {
+      
       // Draw 5 cards; loop 5 times
-      for (var l = 0; l <maxNumberOfClicks; l++) {
+      for (var l = 0; l <5; l++) {
         player2Hand.push(player2Deck.pop())
         // Convert to image; loop 5 times
         var imageOfPlayer2Cards = convertArrayToImageLink(player2Hand);
@@ -302,13 +310,17 @@ function findLowestFullCard(array) {
       var player2Words = ""
       player2Words = "Player 2 drew these cards. Click to see who wins.";
       wordsOutputBox.innerHTML = player2Words
+      button2.style.visibility = "hidden" 
+      gameMode = "whoWins"      
     }
-    numberOfPlayer2Clicks++
     gameMode = "whoWins"
-    button2.style.visibility = "hidden" 
+button2.style.visibility = "hidden" 
       })
 
-      
+console.log(player1Hand)
+console.log(JSON.stringify(player1Hand))
+console.dir(player1Hand)
+console.table(player1Hand)
 
 
 // Find max and min card from an array
@@ -367,9 +379,6 @@ function findLowestFullCard(array) {
        player2CardOutputBox.innerHTML = ""
       }
       gameMode = "player1draw"
-
-      inputField.style.visibility = "visible"
-      buttonChoose.style.visibility = "visible"
       button1.style.visibility = "visible"
       button2.style.visibility = "visible"
       buttonNext.style.visibility = "visible"

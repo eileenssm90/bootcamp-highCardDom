@@ -33,16 +33,15 @@
       } */
 
       #output-div-player1 {
-        position: relative;
-        left: 450px;
+        width: 50%;
+        display: flex;
+        vertical-align: middle;
       }
 
       #output-div-player2 {
         width: 50%;
         display: flex;
         vertical-align: middle;
-        position: relative;
-        left: 450px;
       }
 
       img {
@@ -51,13 +50,14 @@
       }
 
       #buttonArray {
-        position: relative;
-        left: 450px;
+        display: inline-flex;
+        justify-content: space-around;
+        position: center;
       }
 
       #buttonPlayer1 {
         display: inline-flex;
-        justify-items: center;
+        position: center;
       }
 
       #buttonPlayer2 {
@@ -80,8 +80,9 @@
     <!--Insert output field -->
     <div id="output-div">Player 1 starts</div>
     <br />
+
     <!-- <div id="cardContainer"> -->
-    <div id></div>
+
     <h2 id="player1Card">
       <div id="output-div-player1"></div>
     </h2>
@@ -93,8 +94,6 @@
     <!-- </div> -->
 
     <div id="buttonArray">
-      <input id="inputField" />
-      <button id="inputButton">Choose number of draws</button>
       <button id="buttonPlayer1">Player 1, click to draw</button>
       <button id="buttonPlayer2">Player 2, click to draw</button>
       <button id="next">Click to see who wins?</button>
