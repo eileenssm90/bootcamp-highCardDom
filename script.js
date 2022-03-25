@@ -227,6 +227,8 @@ function findLowestFullCard(array) {
     console.log(maxNumberOfClicks)
     buttonChoose.style.visibility = "hidden"
     inputField.style.visibility = "hidden"
+          wordsOutputBox.innerHTML = "Player 1 can click now."
+
   })
   
   // Player 1 button
@@ -374,6 +376,7 @@ function findLowestFullCard(array) {
       button2.style.visibility = "visible"
       buttonNext.style.visibility = "visible"
       buttonRestart.style.visibility = "visible"
+      inputField.value = ""
   })
 
 
